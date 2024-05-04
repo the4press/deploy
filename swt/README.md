@@ -1,0 +1,2 @@
+# SWT
+School website template

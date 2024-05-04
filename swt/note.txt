@@ -1,0 +1,142 @@
+TOPICS
+1. host and deploy projects using github pages
+2. deploy your sites and apps to netlify
+3. store API keys using environment variables on netlify
+4. greate a react project build and deploy to netlify
+5. best practices and tips for working with these tools
+///////////////////////////////////////////////////////////
+Deployment
+ - it is the process of transfering an application or site
+   from a local environment to a live server where it can be
+   accessed and interacted with by other users on the web.
+///////////////////////////////////////////////////////////
+Github pages and Netlify
+ - static site deployment
+ - sites built with HTML, CSS, and client-side JavaScript
+ - not suited for server-side / back-end applications or databases
+ - no backend code
+
+Note: both platforms offer custom domain configuration and HTTPS for sites
+
+echo "# hosting" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/the4press/hosting.git
+git push -u origin main
+
+///////////////////////////////////////////////////////////
+Github pages
+ - prefect for simpler, smaller projects
+ - creating documenation for your projects hosted on github
+ - URL: username.github.io/repo-name
+
+Netlify
+ - user for more complex applications
+ - supports modren build tools and advanced features
+ - serverless functions, user authentication, form handling, etc.
+ 
+ Deployment Files
+  - a single directory containing HTML, CSS, JS, images, and other assets
+  - ex: project root directory, or a dedicated build folder
+///////////////////////////////////////////////////////////
+Continuous Deployment
+ - a process that automatically deploys changes whenever push to the
+   project repo
+///////////////////////////////////////////////////////////
+Protecting Your API Keys
+ - use private page for API
+ - export const api = 'asdfsadfasdfasdf';
+ - import {api} from "./private.js";
+ - <script type="module" src=""></script>
+ - find key on inspect > network
+ - netlify add "environment variables"
+ - process.env.VARIABLE_NAME
+
+install the netlify CLI 
+ - run: npm install netlify-cli -g
+ - run: netlify
+ - run: netlify init
+ 
+ netlify /functions / funcname /funcname.js
+ 
+create a new function
+ - run: netlify functions:create
+   - select: serverless function
+   - path select: netlify/funcitons
+   - select lang: JavaScript
+   - select template: [hello-world]
+   - select func name: APIFunc
+url: netlifyPath/.netlify/functions/APIFunc
+
+code template:
+const handler = async (event) => {
+    try{
+        const subject = event.queryStringParameters.name || 'World'
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: `hello ${subject}` }),
+        }
+    }catch (error) {
+        return { statusCode: 500, body: error.toString() }
+    }
+}
+
+module.exports = { handler }
+----------------------------------------------------------
+real code:
+const handler = async (event) => {
+    try{
+        const apiKey = process.env.MyApiKey
+        const para = event.queryStringParameters.para
+        const response = await fetch(URL?apiName:apiKey&paraNname:para)
+        const data = response.json()
+        return {
+            statusCode: 200,
+            body: JSON.stringify(data),
+        }
+    }catch (error) {
+        return { statusCode: 500, body: error.toString() }
+    }
+}
+
+module.exports = { handler }
+///////////////////////////////////////////////////////////
+vite
+npm create vite@latest
+npm install
+npm run dev
+npm run build
+///////////////////////////////////////////////////////////
+Troubleshooting Common Deployment Issues
+- remember to select branch where files are location in github
+- 404 error mean github didnt finish the deployment
+- relative paths: absolute paths need to switch to relative paths
+  - Absolute paths always point to the same location regardless of the current 
+    directory, whereas relative paths may point to different locations depending 
+    on the current directory
+- commit the project build or the compiled code to repo
+
+- 404 error: ensure that you have the correct publish folder (Public/dist) for project
+- blank page: if project doesnt need to generate dist or public folder, be sure to set
+  the base directory to the root of project
+///////////////////////////////////////////////////////////
+Best practices
+ - set up and use a custom domain
+ - cutomize 404 page
+ - secure site with HTTPS
+
+handling form submission on netlify
+ - add a special attribute on netlify for the form
+
+netlify functions, identity, and large media
+ - netlify function allow to run server side code directly from front end
+   -  netlify serverless functions to protect API keys
+   -  use for handling tasks like authentication or form submission
+
+- identity (user authentication)
+   - manage signup, logins, password recovery etc..
+
+- large media
+   - handle images and other large aset files directly in git
